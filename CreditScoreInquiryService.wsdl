@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="OnlineServices" targetNamespace="http://www.bank.org/OnlineServices/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.bank.org/OnlineServices/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:documentation>
+    <wsdl:appinfo source="WMQI_APPINFO">
+      <MRWSDLAppInfo imported="true">
+        <generatedXSD location="BalanceInquiryService_InlineSchema1.xsd"/>
+        <binding hasEncoding="false" imported="true" name="OnlineServicesSOAP" originalBindingStyle="document"/>
+      </MRWSDLAppInfo>
+    </wsdl:appinfo>
+  </wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.bank.org/OnlineServices/">
+<xsd:include schemaLocation="BalanceInquiryService_InlineSchema1.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="CreditCheckRequest">
+    <wsdl:part element="tns:CreditScoreInquiry" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="CreditCheckResponse">
+    <wsdl:part element="tns:CreditScoreInquiryResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="OnlineServices">
+    <wsdl:operation name="CreditScoreCheck">
+      <wsdl:input message="tns:CreditCheckRequest"/>
+      <wsdl:output message="tns:CreditCheckResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OnlineServicesSOAP" type="tns:OnlineServices">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="CreditScoreCheck">
+      <soap:operation soapAction="http://www.bank.org/OnlineServices/BalanceEnquiry"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="OnlineServices">
+    <wsdl:port binding="tns:OnlineServicesSOAP" name="OnlineServicesSOAP">
+      <soap:address location="http://www.example.org/OnlineBankingServices"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

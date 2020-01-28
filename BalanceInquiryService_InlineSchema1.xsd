@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.bank.org/OnlineServices/" xmlns:ibmSchExtn="http://www.ibm.com/schema/extensions" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.bank.org/OnlineServices/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+   <xsd:element ibmSchExtn:docRoot="true" name="CreditScoreInquiry">
+        <xsd:complexType>
+          <xsd:sequence>
+                        <xsd:element name="AccountNumber" type="xsd:string"/>
+                        <xsd:element name="AccountType" type="xsd:string"/>
+
+
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+            <xsd:element ibmSchExtn:docRoot="true" name="CreditScoreInquiryResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+                        <xsd:element name="AccountNumber" type="xsd:string"/>
+                        <xsd:element name="CreditScore" type="xsd:int"/>
+                        <xsd:element name="CreditCheckResult" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+        </xsd:schema>
