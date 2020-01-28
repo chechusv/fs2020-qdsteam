@@ -1,0 +1,60 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "CDS Offer Elegibility",
+    "version" : "1.0.0",
+    "description" : "CDS Offer Elegibility"
+  },
+  "paths" : {
+    "/validate" : {
+      "get" : {
+        "operationId" : "getValidate",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/validation-result"
+            }
+          }
+        },
+        "produces" : [ "application/json" ],
+        "description" : "Retrieve validate",
+        "parameters" : [ {
+          "name" : "customer-name",
+          "in" : "query",
+          "type" : "string"
+        }, {
+          "name" : "amount",
+          "in" : "query",
+          "type" : "integer"
+        }, {
+          "name" : "card-number",
+          "in" : "query",
+          "type" : "string"
+        } ]
+      }
+    }
+  },
+  "basePath" : "/offerelegibility/v1",
+  "definitions" : {
+    "validation-result" : {
+      "type" : "object",
+      "properties" : {
+        "validation-code" : {
+          "type" : "string"
+        },
+        "credit-rating" : {
+          "type" : "string",
+          "properties" : { }
+        },
+        "card-status" : {
+          "type" : "string",
+          "properties" : { }
+        },
+        "loan-elegibility" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
