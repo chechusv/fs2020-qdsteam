@@ -1,0 +1,206 @@
+$integration: 'http://ibm.com/appconnect/integration/v2/integrationFile'
+integration:
+  type: api
+  trigger-interfaces:
+    trigger-interface-1:
+      triggers:
+        retrieveallOrders:
+          assembly:
+            $ref: '#/integration/assemblies/assembly-2'
+          input-context:
+            data: Orders
+          output-context:
+            data: Orders
+      options:
+        resources:
+          - business-object: Orders
+            model:
+              $ref: '#/models/Orders'
+            triggers:
+              retrieveall: retrieveallOrders
+      type: api-trigger
+  action-interfaces:
+    action-interface-2:
+      type: api-action
+      business-object: Account
+      connector-type: salesforce
+      account-name: Account 1
+      actions:
+        RETRIEVEALL: {}
+    action-interface-1:
+      type: api-action
+      business-object: Order
+      connector-type: salesforce
+      account-name: Account 1
+      actions:
+        RETRIEVEALL: {}
+    action-interface-4:
+      type: api-action
+      business-object: OrderItem
+      connector-type: salesforce
+      account-name: Account 1
+      actions:
+        RETRIEVEALL: {}
+  assemblies:
+    assembly-2:
+      assembly:
+        execute:
+          - retrieve-action:
+              name: Salesforce Retrieve accounts
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-2'
+              filter:
+                where:
+                  Name: '{{$api.where.customerName}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                limit: 10
+              allow-truncation: false
+              pagination-type: TOKEN
+              allow-empty-output: false
+          - retrieve-action:
+              name: Salesforce Retrieve orders
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-1'
+              filter:
+                where:
+                  AccountId: '{{$SalesforceRetrieveaccounts.Id}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                  - variable: SalesforceRetrieveaccounts
+                    $ref: >-
+                      #/node-output/Salesforce Retrieve
+                      accounts/response/payload
+                  - variable: SalesforceRetrieveaccountsMetadata
+                    $ref: '#/node-output/Salesforce Retrieve accounts/response'
+                limit: 10
+              allow-truncation: false
+              pagination-type: TOKEN
+              allow-empty-output: false
+          - retrieve-action:
+              name: Salesforce Retrieve order products
+              target:
+                $ref: '#/integration/action-interfaces/action-interface-4'
+              filter:
+                where:
+                  OrderId: '{{$SalesforceRetrieveorders.Id}}'
+                input:
+                  - variable: api
+                    $ref: '#/trigger/api/parameters'
+                  - variable: SalesforceRetrieveaccounts
+                    $ref: >-
+                      #/node-output/Salesforce Retrieve
+                      accounts/response/payload
+                  - variable: SalesforceRetrieveaccountsMetadata
+                    $ref: '#/node-output/Salesforce Retrieve accounts/response'
+                  - variable: SalesforceRetrieveorders
+                    $ref: '#/node-output/Salesforce Retrieve orders/response/payload'
+                  - variable: SalesforceRetrieveordersMetadata
+                    $ref: '#/node-output/Salesforce Retrieve orders/response'
+                limit: 10
+              allow-truncation: false
+              pagination-type: TOKEN
+              allow-empty-output: false
+          - response:
+              name: response-1
+              reply-maps:
+                - title: Orders successfully retrieved
+                  status-code: '200'
+                  map:
+                    $map: 'http://ibm.com/appconnect/map/v1'
+                    input:
+                      - variable: api
+                        $ref: '#/trigger/api/parameters'
+                      - variable: SalesforceRetrieveaccounts
+                        $ref: >-
+                          #/node-output/Salesforce Retrieve
+                          accounts/response/payload
+                      - variable: SalesforceRetrieveaccountsMetadata
+                        $ref: '#/node-output/Salesforce Retrieve accounts/response'
+                      - variable: SalesforceRetrieveorders
+                        $ref: >-
+                          #/node-output/Salesforce Retrieve
+                          orders/response/payload
+                      - variable: SalesforceRetrieveordersMetadata
+                        $ref: '#/node-output/Salesforce Retrieve orders/response'
+                      - variable: SalesforceRetrieveorderproducts
+                        $ref: >-
+                          #/node-output/Salesforce Retrieve order
+                          products/response/payload
+                      - variable: SalesforceRetrieveorderproductsMetadata
+                        $ref: >-
+                          #/node-output/Salesforce Retrieve order
+                          products/response
+                    mappings:
+                      - Orders:
+                          foreach:
+                            input: '$SalesforceRetrieveorders '
+                            iterator: OrdersItem
+                            mappings:
+                              - customerID:
+                                  template: '{{$SalesforceRetrieveaccounts.Id}}'
+                              - customerName:
+                                  template: '{{$SalesforceRetrieveaccounts.Name}}'
+                              - productAmount:
+                                  expression: '$SalesforceRetrieveorderproducts.UnitPrice '
+                              - productName:
+                                  expression: '$SalesforceRetrieveorderproducts.OrderId '
+                  input:
+                    - variable: api
+                      $ref: '#/trigger/api/parameters'
+                    - variable: SalesforceRetrieveaccounts
+                      $ref: >-
+                        #/node-output/Salesforce Retrieve
+                        accounts/response/payload
+                    - variable: SalesforceRetrieveaccountsMetadata
+                      $ref: '#/node-output/Salesforce Retrieve accounts/response'
+                    - variable: SalesforceRetrieveorders
+                      $ref: >-
+                        #/node-output/Salesforce Retrieve
+                        orders/response/payload
+                    - variable: SalesforceRetrieveordersMetadata
+                      $ref: '#/node-output/Salesforce Retrieve orders/response'
+                    - variable: SalesforceRetrieveorderproducts
+                      $ref: >-
+                        #/node-output/Salesforce Retrieve order
+                        products/response/payload
+                    - variable: SalesforceRetrieveorderproductsMetadata
+                      $ref: >-
+                        #/node-output/Salesforce Retrieve order
+                        products/response
+  name: CustomerOrders
+models:
+  Orders:
+    name: Orders
+    properties:
+      customerID:
+        required: false
+        id: true
+        type: string
+      customerName:
+        required: false
+        id: false
+        type: string
+      productId:
+        required: false
+        id: false
+        type:
+          - string
+      productAmount:
+        required: false
+        id: false
+        type:
+          - string
+    plural: Orders
+    description: ' '
+    operations:
+      retrieveall: '#/integration/assemblies/assembly-2'
+    interactions:
+      retrieveall:
+        pagination-type: none
+        filterSupport:
+          queryablefields:
+            - customerName
+        isVisible: true
