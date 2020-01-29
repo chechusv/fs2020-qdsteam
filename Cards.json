@@ -1,0 +1,86 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Cards",
+    "version" : "1.0.0",
+    "description" : "Cards"
+  },
+  "paths" : {
+    "/validate" : {
+      "post" : {
+        "operationId" : "postValidate",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/CardOutput"
+            }
+          }
+        },
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "description" : "Insert a validate",
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/CardInput"
+          },
+          "description" : "The request body for the operation",
+          "required" : true
+        } ]
+      }
+    }
+  },
+  "basePath" : "/cards/v1",
+  "definitions" : {
+    "CardInput" : {
+      "type" : "object",
+      "properties" : {
+        "CardNumber" : {
+          "type" : "string"
+        },
+        "CardType" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CardOutput" : {
+      "type" : "object",
+      "properties" : {
+        "CardNumber" : {
+          "type" : "string"
+        },
+        "CardType" : {
+          "type" : "string"
+        },
+        "CardCurrency" : {
+          "type" : "string"
+        },
+        "CardProviderType" : {
+          "type" : "string"
+        },
+        "CardStatus" : {
+          "type" : "string"
+        },
+        "CardClass" : {
+          "type" : "string"
+        },
+        "IssueDate" : {
+          "type" : "string"
+        },
+        "ExpiryDate" : {
+          "type" : "string"
+        },
+        "TotalCreditLimit" : {
+          "type" : "string"
+        },
+        "AvailableCreditLimit" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "schemes" : [ "http" ],
+  "host" : "acevm:7800"
+}

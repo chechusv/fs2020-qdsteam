@@ -1,0 +1,74 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Accounts",
+    "version" : "1.0.0",
+    "description" : "Accounts"
+  },
+  "paths" : {
+    "/details" : {
+      "post" : {
+        "operationId" : "postDetails",
+        "responses" : {
+          "200" : {
+            "description" : "The operation was successful.",
+            "schema" : {
+              "$ref" : "#/definitions/Output"
+            }
+          }
+        },
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "description" : "Insert a details",
+        "parameters" : [ {
+          "name" : "body",
+          "in" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/Input"
+          },
+          "description" : "The request body for the operation",
+          "required" : true
+        } ]
+      }
+    }
+  },
+  "basePath" : "/accounts/v1",
+  "definitions" : {
+    "Input" : {
+      "type" : "object",
+      "properties" : {
+        "AccountNumber" : {
+          "type" : "string"
+        },
+        "AccountType" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Output" : {
+      "type" : "object",
+      "properties" : {
+        "AccountNumber" : {
+          "type" : "string"
+        },
+        "AccountType" : {
+          "type" : "string"
+        },
+        "Status" : {
+          "type" : "string"
+        },
+        "AccountBalance" : {
+          "type" : "string"
+        },
+        "AccountCurrency" : {
+          "type" : "string"
+        },
+        "AccountCreationDate" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "schemes" : [ "http" ],
+  "host" : "acevm:7800"
+}
